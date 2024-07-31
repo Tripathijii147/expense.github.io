@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function addExpense(name, amount) {
         const expense = { id: Date.now(), name, amount: parseFloat(amount) };
         expenses.push(expense);
+        console.log("Expense added:", expense);
         renderExpenses();
         updateTotalAmount();
     }
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (expense) {
             expense.name = newName;
             expense.amount = parseFloat(newAmount);
+            console.log("Expense edited:", expense);
             renderExpenses();
             updateTotalAmount();
         }
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function deleteExpense(id) {
         expenses = expenses.filter(exp => exp.id !== id);
+        console.log("Expense deleted with id:", id);
         renderExpenses();
         updateTotalAmount();
     }
@@ -48,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateTotalAmount() {
         const totalAmount = expenses.reduce((total, exp) => total + exp.amount, 0);
         totalAmountSpan.textContent = totalAmount.toFixed(2);
+        console.log("Total amount updated:", totalAmount);
     }
 
     expenseForm.addEventListener("submit", (e) => {
