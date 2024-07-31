@@ -66,6 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Invalid input: ", name, amount);
         }
     });
+    document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.getElementById('total-amount').innerText = total-amount+expense-amount;
+            });
+        });
 
     expenseList.addEventListener("click", (e) => {
         if (e.target.classList.contains("delete")) {
