@@ -7,12 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let expenses = [];
 
     function addExpense(name, amount) {
+        console.log(`Adding expense: ${name}, ${amount}`);
         const expense = { id: Date.now(), name, amount };
         expenses.push(expense);
         renderExpenses();
     }
 
     function editExpense(id, newName, newAmount) {
+        console.log(`Editing expense ID: ${id}`);
         const expense = expenses.find(exp => exp.id === id);
         if (expense) {
             expense.name = newName;
@@ -22,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function deleteExpense(id) {
+        console.log(`Deleting expense ID: ${id}`);
         expenses = expenses.filter(exp => exp.id !== id);
         renderExpenses();
     }
@@ -43,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const name = expenseNameInput.value;
         const amount = parseFloat(expenseAmountInput.value);
+        console.log(`Form submitted with: ${name}, ${amount}`);
         if (name && !isNaN(amount)) {
             addExpense(name, amount);
             expenseNameInput.value = '';
