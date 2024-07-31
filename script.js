@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const expenseNameInput = document.getElementById("expense-name");
     const expenseAmountInput = document.getElementById("expense-amount");
     const expenseList = document.getElementById("expense-list");
+    const totalAmountSpan = document.getElementById("total-amount");
 
     let expenses = [];
 
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const expense = { id: Date.now(), name, amount };
         expenses.push(expense);
         renderExpenses();
+        updateTotalAmount();
     }
 
     function editExpense(id, newName, newAmount) {
@@ -18,12 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
             expense.name = newName;
             expense.amount = newAmount;
             renderExpenses();
+            updateTotalAmount();
         }
     }
 
     function deleteExpense(id) {
         expenses = expenses.filter(exp => exp.id !== id);
         renderExpenses();
+        updateTotalAmount();
     }
 
     function renderExpenses() {
@@ -39,6 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             expenseList.appendChild(li);
         });
+    }
+
+    function updateTotalAmount() {
+        const totalAmount = expenses.reduce((total, exp) => total + exp.amount, 0);
+        totalAmountSpan.textContent = totalAmount.toFixed(2);
     }
 
     expenseForm.addEventListener("submit", (e) => {
