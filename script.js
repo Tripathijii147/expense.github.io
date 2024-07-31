@@ -1,83 +1,69 @@
-let expenses = [];
-let totalamount = 0;
+document.addEventListener("DOMContentLoaded", () => {
+    const expenseForm = document.getElementById("expense-form");
+    const expenseNameInput = document.getElementById("expense-name");
+    const expenseAmountInput = document.getElementById("expense-amount");
+    const expenseList = document.getElementById("expense-list");
 
-const catagorySelect = document.getElementById('catagory-select');
-const amountInput = document.getElementById('amount-input');
-const dateInput = document.getElementById('date-input');
-const addBtn document.getElementById('add-btn');
-const expensesTableBody = document.getElementById('expense-table-body');
-const totalAmountCell = document.getElementById('total-amount');
+    let expenses = [];
 
-addBtn.addEventListener('click',function() {
-    const catagory = catagorySelect.value;
-    const amount = Number(amountInput.value);
-    const date = dataInput.value;
-
-    if(catagory ===""){
-        alert ('Please select a catagory');
-        return;
+    function addExpense(name, amount) {
+        const expense = { id: Date.now(), name, amount };
+        expenses.push(expense);
+        renderExpenses();
     }
-    if(isNaN(amount)|| amount <=0){
-        alert('Please enter a valid amount')
-        return;
-    }
-        if(date ===""){
-            alert ('Please select a date')
-            return;
+
+    function editExpense(id, newName, newAmount) {
+        const expense = expenses.find(exp => exp.id === id);
+        if (expense) {
+            expense.name = newName;
+            expense.amount = newAmount;
+            renderExpenses();
         }
-        expenses.push({catagory,amount,date});
+    }
 
-        totalamount += amount;
-        totalAmountCell.textContent = toatlAmount;
+    function deleteExpense(id) {
+        expenses = expenses.filter(exp => exp.id !== id);
+        renderExpenses();
+    }
 
-        const newRow = expensesTableBody.insertRow();
-
-        const catagoryCell = newRow.insertCell();
-        const amountCell = newRow.insertCell();
-        const dateCell = newRow.insertCell();
-        const deleteCell = newRow.insertCell();
-        const deleteBtn = document.createElement('button');
-
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.classList.add('delete-btn');
-        deleteBtn.addEventListener('click',function(){
-            expenses.splice(expenses.indexOf(expense),1);
-
-            totalAmount -= expense.amount;
-            totalAmountCell.textContent = totalamount;
-
-            expensesTableBody.removeChild(newrow);
+    function renderExpenses() {
+        expenseList.innerHTML = '';
+        expenses.forEach(exp => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                ${exp.name}: $${exp.amount}
+                <button class="edit" data-id="${exp.id}">Edit</button>
+                <button class="delete" data-id="${exp.id}">Delete</button>
+            `;
+            expenseList.appendChild(li);
         });
+    }
 
-        const expense = expense[expense.lenth-1];
-        catagoryCell.textContent = expense.catagory;
-        amountCell.textContent = expense.amount;
-        dataCell.textContent = expense.data;
-        deleteCell.appendChild(deleteBtn);
-
+    expenseForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = expenseNameInput.value;
+        const amount = parseFloat(expenseAmountInput.value);
+        if (name && !isNaN(amount)) {
+            addExpense(name, amount);
+            expenseNameInput.value = '';
+            expenseAmountInput.value = '';
+        }
     });
 
-    for(const expense of expenses){
-        totalAmount += expense.amount;
-        totalAmount.textContent = totalAmount;
-
-        const newRow = expensesTableBody.insertRow();
-        const catagoryCell = newRow.insertCell();
-        const amountCell = newRow.insertCell();
-        const dateCell = newRow.insertCell();
-        const deleteCell = newRow.insertCell();
-        const deleteBtn = document.createElement('button'); 
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.classList.add('delete-btn');
-        deleteBtn.addEventListener('click',function(){
-            expenses.splice(expenses.indexOf(expense),1);
-
-            totalAmount -= expense.amount;
-            totalAmountCell.textContent = totalamount;
-
-            expensesTableBody.removeChild(newrow);
-        });
-      catagoryCell.textContent = expense.catagory;
-        amountCell.textContent = expense.amount;
-        dataCell.textContent = expense.data;
-        deleteCell.appendChild(deleteBtn);
+    expenseList.addEventListener("click", (e) => {
+        if (e.target.classList.contains("delete")) {
+            const id = parseInt(e.target.dataset.id, 10);
+            deleteExpense(id);
+        } else if (e.target.classList.contains("edit")) {
+            const id = parseInt(e.target.dataset.id, 10);
+            const expense = expenses.find(exp => exp.id === id);
+            if (expense) {
+                const newName = prompt("Edit expense name", expense.name);
+                const newAmount = parseFloat(prompt("Edit expense amount", expense.amount));
+                if (newName && !isNaN(newAmount)) {
+                    editExpense(id, newName, newAmount);
+                }
+            }
+        }
+    });
+});
