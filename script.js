@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let expenses = [];
 
     function addExpense(name, amount) {
-        const expense = { id: Date.now(), name, amount };
+        const expense = { id: Date.now(), name, amount: parseFloat(amount) };
         expenses.push(expense);
         renderExpenses();
         updateTotalAmount();
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const expense = expenses.find(exp => exp.id === id);
         if (expense) {
             expense.name = newName;
-            expense.amount = newAmount;
+            expense.amount = parseFloat(newAmount);
             renderExpenses();
             updateTotalAmount();
         }
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         expenses.forEach(exp => {
             const li = document.createElement("li");
             li.innerHTML = `
-                ${exp.name}: $${exp.amount}
+                ${exp.name}: $${exp.amount.toFixed(2)}
                 <div>
                     <button class="edit" data-id="${exp.id}">Edit</button>
                     <button class="delete" data-id="${exp.id}">Delete</button>
@@ -58,6 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
             addExpense(name, amount);
             expenseNameInput.value = '';
             expenseAmountInput.value = '';
+        } else {
+            console.log("Invalid input: ", name, amount);
         }
     });
 
